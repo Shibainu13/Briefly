@@ -6,6 +6,7 @@ import ImageWithFallback from "@/components/image/ImageWithFallback";
 import Carousel from "@/components/carousel/Carousel";
 import Details from "./Details";
 import Summary from "./Summary";
+import Chatbot from "./Chatbot";
 
 type Props = {
   className?: string,
@@ -16,7 +17,7 @@ export default function Article({ className }: Props) {
   const searchQuery = searchParams.get("id");
   const [articleData, setArticleData] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [activeTab, setActiveTab] = useState<"details" | "summary">("details");
+  const [activeTab, setActiveTab] = useState<"details" | "summary" | "chatbot">("details");
 
   useEffect(() => {
     const fetchArticleData = async () => {
@@ -70,7 +71,7 @@ export default function Article({ className }: Props) {
             <div className="flex space-x-8">
               <button
                 onClick={() => setActiveTab("details")}
-                className={`text-center w-1/2 h-[32px] flex items-center justify-center ${
+                className={`text-center w-1/3 h-[32px] flex items-center justify-center ${
                   activeTab === "details"
                     ? "text-xl text-gray-800 dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 font-medium"
@@ -81,7 +82,7 @@ export default function Article({ className }: Props) {
               <span className="text-lg text-gray-800 dark:text-white">|</span>
               <button
                 onClick={() => setActiveTab("summary")}
-                className={`text-center w-1/2 h-[32px] flex items-center justify-center ${
+                className={`text-center w-1/3 h-[32px] flex items-center justify-center ${
                   activeTab === "summary"
                     ? "text-xl text-gray-800 dark:text-white font-bold"
                     : "text-gray-500 dark:text-gray-400 font-medium"
@@ -89,21 +90,24 @@ export default function Article({ className }: Props) {
               >
                 Summary
               </button>
+              <span className="text-lg text-gray-800 dark:text-white">|</span>
+              <button
+                onClick={() => setActiveTab("chatbot")}
+                className={`text-center w-1/3 h-[32px] flex items-center justify-center ${
+                  activeTab === "chatbot"
+                    ? "text-xl text-gray-800 dark:text-white font-bold"
+                    : "text-gray-500 dark:text-gray-400 font-medium"
+                }`}
+              >
+                Chatbot
+              </button>
             </div>
-            <p className="text-end text-sm text-gray-500 dark:text-gray-300 px-4">
-              {new Date(articleData.created_at).toLocaleDateString("en-GB")}
-            </p>
           </div>
-          {/* Content */}
-          <div className="bg-gray-100 dark:bg-slate-700 p-4 rounded-2xl w-full sm:h-[1200px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-[#3e3e3e] dark:scrollbar-track-[#232323] shadow-md">
-            {activeTab === "details" ? (
-              <Details
-                htmlContent={articleData.html}
-              />
-            ) : (
-              <Summary summary={articleData.content} />
-            )}
-          </div>
+            <div className={`bg-gray-100 dark:bg-slate-700 p-4 rounded-2xl w-full sm:w-[800px] ${activeTab === "chatbot" ? "h-[400px]" : "h-[1200px]"} overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 dark:scrollbar-thumb-[#3e3e3e] dark:scrollbar-track-[#232323] shadow-md mx-auto`}>
+            {activeTab === "details" && <Details htmlContent={articleData.html} />}
+            {activeTab === "summary" && <Summary summary={articleData.content} />}
+            {activeTab === "chatbot" && <Chatbot />}
+            </div>
         </div>
       </section>
     </div>
